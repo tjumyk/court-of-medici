@@ -908,6 +908,7 @@ function do_action(card, deck, container, index) {
         deck.push(card);
         var target_value = calculate_value(deck);
         log("Target Value = " + target_value);
+        //Scan Inner Circle
         for (var i = 0; i < game.inner_circle.length; i++) {
             var d = game.inner_circle[i];
             if (d == deck)
@@ -922,6 +923,23 @@ function do_action(card, deck, container, index) {
                 for (var j = i; j < game.inner_circle.length - 1; j++)
                     game.inner_circle[j] = game.inner_circle[j + 1];
                 game.inner_circle.pop();
+            }
+        }
+        //Scan Outter Circle
+        for (var i = 0; i < game.outter_circle.length; i++) {
+            var d = game.outter_circle[i];
+            if (d == deck)
+                continue;
+            var value = calculate_value(d);
+            log("Current Value = " + value);
+            if (value == target_value) { //discard this deck
+                for (var j = 0; j < d.length; j++) {
+                    var card = d[j];
+                    discard_card(card);
+                }
+                for (var j = i; j < game.outter_circle.length - 1; j++)
+                    game.outter_circle[j] = game.outter_circle[j + 1];
+                game.outter_circle.pop();
             }
         }
     }
